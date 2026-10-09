@@ -9,9 +9,9 @@
 <style>
 :root{--green:#0B6A3D;--yellow:#FFC72C;--cream:#FFFBEB;--dark:#0B2E1F}
 *{box-sizing:border-box;margin:0;padding:0;font-family:system-ui,sans-serif}
-body{background:var(--cream);color:var(--dark)}
+body{background:var(--cream);color:var(--dark);padding-bottom:90px}
 header{background:var(--green);color:white;padding:14px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10}
-header.brand{display:flex;align-items:center;gap:10px}
+.brand{display:flex;align-items:center;gap:10px}
 header img{width:42px;height:42px;border-radius:10px;background:white;object-fit:cover}
 .btn{border:none;padding:12px 16px;border-radius:12px;font-weight:700;cursor:pointer}
 .btn-yellow{background:var(--yellow);color:var(--dark)}
@@ -25,7 +25,9 @@ header img{width:42px;height:42px;border-radius:10px;background:white;object-fit
 .input{width:100%;padding:12px;border-radius:10px;border:2px solid #E8DD9C;margin-top:6px}
 .modal{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;align-items:center;justify-content:center;z-index:50;padding:16px}
 .modal.show{display:flex}
-.modalBox{background:white;width:100%;max-width:420px;border-radius:18px;padding:18px}
+.modalBox{background:white;width:100%;max-width:420px;border-radius:18px;padding:18px;max-height:85vh;overflow:auto}
+.badge{font-size:10px;padding:3px 8px;border-radius:20px;background:var(--yellow);font-weight:800}
+.me{border:2px solid var(--green);background:#E8F5E9}
 </style>
 </head>
 <body>
@@ -43,16 +45,14 @@ header img{width:42px;height:42px;border-radius:10px;background:white;object-fit
 <p style="font-size:13px">10 Members • R500/month each</p>
 <div class="grid2" style="margin-top:14px">
 <button class="btn btn-yellow" onclick="openPay()">PAY NOW</button>
-<button class="btn btn-outline" onclick="showMembers()">MEMBERS</button>
+<button class="btn btn-outline" style="background:white" onclick="goMembers()">MEMBERS</button>
 </div>
 </div>
-
 <div class="card">
 <h3>Quick Pay - Super Simple</h3>
 <input id="payAmount" class="input" type="number" placeholder="e.g. 500">
 <button class="btn btn-green" style="width:100%;margin-top:10px" onclick="doPay()">PAY NOW</button>
 </div>
-
 <div class="card">
 <h3>Recent Activity</h3>
 <div id="activity" style="margin-top:10px;font-size:13px">No payments yet. Be first!</div>
@@ -60,7 +60,21 @@ header img{width:42px;height:42px;border-radius:10px;background:white;object-fit
 </div>
 
 <div id="membersPage" style="display:none">
-<div class="card"><h3>10 Members</h3><div id="membersList" style="margin-top:10px"></div></div>
+<div class="card">
+<div style="display:flex;justify-content:space-between;align-items:center">
+<h3>10 Members</h3>
+<button class="btn btn-yellow" style="padding:8px 12px;font-size:12px" onclick="openRequest()">+ REQUEST TO JOIN</button>
+</div>
+<div style="margin-top:10px;display:flex;gap:6px">
+<input id="adminNameEdit" class="input" placeholder="Put member name here (admin)" style="margin:0">
+<button class="btn btn-green" onclick="addMemberByAdmin()">ADD</button>
+</div>
+<div id="membersList" style="margin-top:12px"></div>
+</div>
+<div class="card" id="pendingCard" style="display:none">
+<h3>Pending Requests (Admin)</h3>
+<div id="pendingList" style="margin-top:10px"></div>
+</div>
 </div>
 
 <div class="nav">
@@ -70,11 +84,13 @@ header img{width:42px;height:42px;border-radius:10px;background:white;object-fit
 <button onclick="openPay()">💳<br>PAY</button>
 </div>
 
+<!-- PROFILE -->
 <div id="profileModal" class="modal" onclick="if(event.target==this)closeProfile()">
 <div class="modalBox">
 <h3>My Profile</h3>
-<input id="pName" class="input" placeholder="Your name">
+<input id="pName" class="input" placeholder="Your full name">
 <input id="pPhone" class="input" style="margin-top:8px" placeholder="07...">
+<div style="margin-top:10px"><label style="font-size:12px"><input type="checkbox" id="pIsAdmin"> I am Admin</label></div>
 <div class="grid2" style="margin-top:14px">
 <button class="btn btn-outline" onclick="closeProfile()">CANCEL</button>
 <button class="btn btn-green" onclick="saveProfile()">SAVE</button>
@@ -82,6 +98,7 @@ header img{width:42px;height:42px;border-radius:10px;background:white;object-fit
 </div>
 </div>
 
+<!-- PAY -->
 <div id="payModal" class="modal" onclick="if(event.target==this)closePay()">
 <div class="modalBox">
 <h3>Pay Stokvel</h3>
@@ -93,25 +110,118 @@ header img{width:42px;height:42px;border-radius:10px;background:white;object-fit
 </div>
 </div>
 
+<!-- RECEIPT -->
+<div id="receiptModal" class="modal" onclick="if(event.target==this)closeReceipt()">
+<div class="modalBox" style="border:3px solid #0B6A3D">
+<h3 style="color:#0B6A3D">✅ PAYMENT RECEIPT</h3>
+<p style="margin:10px 0;font-size:12px">MUSINA COMMUNITY 10</p>
+<div style="background:#FFFBEB;padding:12px;border-radius:10px;margin:10px 0;font-size:13px;line-height:1.6" id="receiptData"></div>
+<div class="grid2">
+<button class="btn btn-outline" onclick="closeReceipt()">CLOSE</button>
+<button class="btn btn-green" onclick="downloadReceipt()">📥 SAVE</button>
+</div>
+</div>
+</div>
+
+<!-- REQUEST -->
+<div id="requestModal" class="modal" onclick="if(event.target==this)closeRequest()">
+<div class="modalBox">
+<h3>Request to Join</h3>
+<input id="rName" class="input" placeholder="Your name">
+<input id="rPhone" class="input" style="margin-top:8px" placeholder="Phone 07...">
+<div class="grid2" style="margin-top:14px">
+<button class="btn btn-outline" onclick="closeRequest()">CANCEL</button>
+<button class="btn btn-yellow" onclick="submitRequest()">SEND REQUEST</button>
+</div>
+</div>
+</div>
+
+<!-- CHATBOT -->
+<button onclick="openChat()" style="position:fixed;bottom:80px;left:12px;background:#0B6A3D;color:white;border:none;width:56px;height:56px;border-radius:50%;font-size:24px;z-index:30;box-shadow:0 4px 12px rgba(0,0,0,.3)">💬</button>
+<div id="chatModal" class="modal" onclick="if(event.target==this)closeChat()">
+<div class="modalBox">
+<h3>💚 M10 Encouragement</h3>
+<div style="height:200px;overflow:auto;background:#FFFBEB;padding:10px;border-radius:10px;margin:10px 0;font-size:13px" id="chatBox">
+<div>🤖 Bot: Dumela! We are family! 10 hearts, 1 stokvel! 💛 Stay strong!</div>
+</div>
+<div style="display:flex;gap:8px">
+<input id="chatInput" class="input" placeholder="Type problem..." style="margin:0">
+<button class="btn btn-green" onclick="sendChat()">SEND</button>
+</div>
+<button class="btn btn-outline" style="width:100%;margin-top:10px" onclick="closeChat()">CLOSE</button>
+</div>
+</div>
+
 <script>
 if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js')}
 let members=JSON.parse(localStorage.getItem('m10_members')||'[]');
-if(members.length==0){members=[{name:'Member 1',paid:0},{name:'Member 2',paid:0},{name:'Member 3',paid:0},{name:'Member 4',paid:0},{name:'Member 5',paid:0},{name:'Member 6',paid:0},{name:'Member 7',paid:0},{name:'Member 8',paid:0},{name:'Member 9',paid:0},{name:'Admin',paid:0}];localStorage.setItem('m10_members',JSON.stringify(members))}
+let pending=JSON.parse(localStorage.getItem('m10_pending')||'[]');
 let total=parseInt(localStorage.getItem('m10_total')||'0');
 let activity=JSON.parse(localStorage.getItem('m10_act')||'[]');
-function render(){document.getElementById('totalPot').innerText=total;document.getElementById('membersList').innerHTML=members.map((m,i)=>`<div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #F0E6B8"><span>${m.name} - R${m.paid}</span><button class="btn btn-yellow" style="padding:6px 10px;font-size:12px" onclick="payFor(${i})">PAY</button></div>`).join('');document.getElementById('activity').innerHTML=activity.length?activity.map(a=>`<div>• ${a}</div>`).join(''):'No payments yet.'}
+if(members.length==0){members=[{name:'Member 1',phone:'',paid:0},{name:'Member 2',phone:'',paid:0},{name:'Member 3',phone:'',paid:0}];}
+function saveAll(){localStorage.setItem('m10_members',JSON.stringify(members));localStorage.setItem('m10_pending',JSON.stringify(pending));localStorage.setItem('m10_total',total);localStorage.setItem('m10_act',JSON.stringify(activity));}
+function render(){
+ document.getElementById('totalPot').innerText=total;
+ const myName=(localStorage.getItem('m10_myName')||'').toLowerCase();
+ document.getElementById('membersList').innerHTML=members.map((m,i)=>`
+  <div class="card ${myName && m.name.toLowerCase()==myName?'me':''}" style="margin:8px 0;padding:10px;display:flex;justify-content:space-between;align-items:center">
+   <div><b onclick="editName(${i})" style="cursor:pointer;text-decoration:underline">${m.name}</b> ${myName && m.name.toLowerCase()==myName?'<span class="badge">YOU</span>':''}<br><small>${m.phone||''} • R${m.paid} paid</small></div>
+   <div style="display:flex;gap:4px">
+    <button class="btn btn-yellow" style="padding:6px 10px;font-size:11px" onclick="payFor(${i})">PAY</button>
+    <button class="btn btn-outline" style="padding:6px 8px;font-size:11px" onclick="removeMember(${i})">X</button>
+   </div>
+  </div>`).join('')||'<small>No members yet. Add or request!</small>';
+ document.getElementById('activity').innerHTML=activity.length?activity.map(a=>`<div>• ${a}</div>`).join(''):'No payments yet.';
+ // pending
+ const isAdmin=localStorage.getItem('m10_isAdmin')=='true';
+ document.getElementById('pendingCard').style.display=isAdmin && pending.length?'block':'none';
+ document.getElementById('pendingList').innerHTML=pending.map((p,i)=>`<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #F0E6B8"><span>${p.name} - ${p.phone}</span><button class="btn btn-green" style="padding:6px 10px;font-size:11px" onclick="approveRequest(${i})">ADD THEM</button></div>`).join('');
+}
 render();
 function goHome(){document.getElementById('homePage').style.display='block';document.getElementById('membersPage').style.display='none';document.getElementById('navHome').classList.add('active');document.getElementById('navMembers').classList.remove('active');}
 function goMembers(){document.getElementById('homePage').style.display='none';document.getElementById('membersPage').style.display='block';document.getElementById('navHome').classList.remove('active');document.getElementById('navMembers').classList.add('active');render();}
-function showMembers(){goMembers();}
-function openProfile(){document.getElementById('profileModal').classList.add('show');}
+function openProfile(){document.getElementById('pName').value=localStorage.getItem('m10_myName')||'';document.getElementById('pPhone').value=localStorage.getItem('m10_myPhone')||'';document.getElementById('pIsAdmin').checked=localStorage.getItem('m10_isAdmin')=='true';document.getElementById('profileModal').classList.add('show');}
 function closeProfile(){document.getElementById('profileModal').classList.remove('show');}
-function saveProfile(){localStorage.setItem('m10_myName',document.getElementById('pName').value);localStorage.setItem('m10_myPhone',document.getElementById('pPhone').value);closeProfile();alert('Profile saved boss!');}
+function saveProfile(){localStorage.setItem('m10_myName',document.getElementById('pName').value);localStorage.setItem('m10_myPhone',document.getElementById('pPhone').value);localStorage.setItem('m10_isAdmin',document.getElementById('pIsAdmin').checked);closeProfile();render();alert('Profile saved boss!');}
 function openPay(){document.getElementById('payModal').classList.add('show');}
 function closePay(){document.getElementById('payModal').classList.remove('show');}
-function doPay(){let amt=parseInt(document.getElementById('payAmount').value||'500');total+=amt;activity.unshift(`You paid R${amt}`);localStorage.setItem('m10_total',total);localStorage.setItem('m10_act',JSON.stringify(activity));render();alert('Paid R'+amt+' boss!');}
-function confirmPay(){let amt=parseInt(document.getElementById('mPayAmount').value||'500');total+=amt;activity.unshift(`Paid R${amt}`);localStorage.setItem('m10_total',total);localStorage.setItem('m10_act',JSON.stringify(activity));render();closePay();alert('Thank you boss! R'+amt+' added!');}
-function payFor(i){let amt=500;members[i].paid+=amt;total+=amt;activity.unshift(`${members[i].name} paid R${amt}`);localStorage.setItem('m10_members',JSON.stringify(members));localStorage.setItem('m10_total',total);localStorage.setItem('m10_act',JSON.stringify(activity));render();alert(members[i].name+' paid R'+amt);}
+function openRequest(){document.getElementById('requestModal').classList.add('show');}
+function closeRequest(){document.getElementById('requestModal').classList.remove('show');}
+function submitRequest(){
+ let n=document.getElementById('rName').value.trim();let p=document.getElementById('rPhone').value.trim();
+ if(!n)return alert('Put name boss');
+ pending.push({name:n,phone:p});saveAll();closeRequest();render();
+ alert(n+' requested! Admin will add them. They will see themselves after approval.');
+ // Auto add for now so they see themselves immediately as you asked
+ members.push({name:n,phone:p,paid:0});saveAll();render();
+}
+function approveRequest(i){let p=pending[i];if(!members.find(m=>m.name.toLowerCase()==p.name.toLowerCase())){members.push({name:p.name,phone:p.phone,paid:0});}pending.splice(i,1);saveAll();render();alert(p.name+' added boss!');}
+function addMemberByAdmin(){let n=document.getElementById('adminNameEdit').value.trim();if(!n)return alert('Put name');members.push({name:n,phone:'',paid:0});document.getElementById('adminNameEdit').value='';saveAll();render();alert(n+' added! They will see themselves when they login with same name.');}
+function editName(i){let newName=prompt('Edit name boss:',members[i].name);if(newName){members[i].name=newName.trim();saveAll();render();}}
+function removeMember(i){if(confirm('Remove '+members[i].name+'?')){members.splice(i,1);saveAll();render();}}
+function payFor(i){let amt=500;members[i].paid+=amt;total+=amt;activity.unshift(`${members[i].name} paid R${amt}`);saveAll();render();showReceipt(amt,members[i].name);}
+function doPay(){let amt=parseInt(document.getElementById('payAmount').value||'500');total+=amt;activity.unshift(`You paid R${amt}`);saveAll();render();showReceipt(amt);}
+function confirmPay(){let amt=parseInt(document.getElementById('mPayAmount').value||'500');total+=amt;activity.unshift(`Paid R${amt}`);saveAll();render();closePay();showReceipt(amt);}
+function showReceipt(amount,name){
+ const id='M10-'+Date.now().toString().slice(-6);const date=new Date().toLocaleString();const myName=name||localStorage.getItem('m10_myName')||'Member';
+ document.getElementById('receiptData').innerHTML=`Date: ${date}<br>Name: ${myName}<br>Amount: R${amount}<br>TxID: ${id}<br>Status: ✅ PAID<br><br>MUSINA COMMUNITY 10<br>Thank you! 💚`;
+ document.getElementById('receiptModal').classList.add('show');
+}
+function closeReceipt(){document.getElementById('receiptModal').classList.remove('show');}
+function downloadReceipt(){alert('Screenshot this receipt boss! 📸\n\n'+document.getElementById('receiptData').innerText);}
+function openChat(){document.getElementById('chatModal').classList.add('show');}
+function closeChat(){document.getElementById('chatModal').classList.remove('show');}
+function sendChat(){
+ const input=document.getElementById('chatInput');const box=document.getElementById('chatBox');if(!input.value)return;
+ box.innerHTML+=`<div style="margin-top:8px"><b>You:</b> ${input.value}</div>`;
+ let reply="💚 Stay strong! Musina Community 10 is with you! Together we rise! 🙏";
+ const txt=input.value.toLowerCase();
+ if(txt.includes('flood')||txt.includes('fire')||txt.includes('disaster')||txt.includes('problem')||txt.includes('help')){
+  reply="🚨 POLE! Stay safe first! M10 family will support you. Admin will call you. You are not alone! We are 10, we are one! 💚💛";
+ }
+ setTimeout(()=>{box.innerHTML+=`<div style="margin-top:8px;color:#0B6A3D"><b>Bot:</b> ${reply}</div>`;box.scrollTop=box.scrollHeight;},400);
+ input.value='';
+}
 </script>
 </body>
 </html>
