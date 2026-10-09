@@ -1,12 +1,21 @@
 {
-  "name": "MUSINA COMMUNITY 10",
-  "short_name": "M10",
+  "name": "MUSINA COMMUNITY 10 RENT STOKVEL",
+  "short_name": "M10 RENT",
+  "description": "Musina Community 10 Rent Stokvel - 10 Members, Rent Pot + Disaster Fund, Trusted Pay",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#FFFBEB",
   "theme_color": "#0B6A3D",
   "icons": [
-    {"src": "logo.png","sizes":"192x192","type":"image/png"},
-    {"src": "logo.png","sizes":"512x512","type":"image/png"}
+    {
+      "src": "logo.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "logo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
   ]
 }
