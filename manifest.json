@@ -1,0 +1,9 @@
+{
+  "name": "MUSINA COMMUNITY 10",
+  "short_name": "M10",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#FFFBEB",
+  "theme_color": "#0B6A3D",
+  "icons": [{"src": "logo.png","sizes":"512x512","type":"image/png"}]
+}
