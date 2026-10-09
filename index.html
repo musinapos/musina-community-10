@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MUSINA COMMUNITY 10</title>
+<meta name="theme-color" content="#0B6A3D">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial}
+body{background:#FFFBEB;padding-bottom:80px}
+.header{display:flex;align-items:center;gap:12px;padding:15px;background:#FFFBEB}
+.shield{width:55px;height:55px;background:#0B6A3D;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:30px}
+.card-green{background:#0B6A3D;border-radius:22px;padding:22px;color:white;margin:10px 15px;position:relative;overflow:hidden}
+.card-yellow{background:#FFC72C;border-radius:22px;padding:22px;margin:10px 15px}
+.btn-red{background:#D32F2F;color:white;width:calc(100% - 30px);margin:15px;padding:18px;border-radius:14px;border:none;font-size:18px;font-weight:bold}
+.nav{position:fixed;bottom:0;left:0;right:0;background:white;display:flex;justify-content:space-around;padding:12px;border-top:1px solid #ddd}
+.nav div{padding:10px;border-radius:10px}
+.active{background:#0B6A3D;color:white}
+.hidden{display:none}
+</style>
+</head>
+<body>
+<!-- HOME TAB -->
+<div id="homeTab">
+<div class="header"><div class="shield">🛡️</div><div><b>MUSINA COMMUNITY 10</b><br><small>Stokvel • Musina, Limpopo</small></div></div>
+<div class="card-green">
+<div style="background:white;color:black;display:inline-block;padding:4px 10px;border-radius:8px;font-size:12px">Disaster Pot:</div>
+<h1 style="font-size:52px;margin:10px 0">R10,000</h1>
+<div style="background:#FFC72C;color:black;display:inline-block;padding:6px 14px;border-radius:20px">✅ My Cover: Active</div>
+</div>
+<h3 style="text-align:center;margin:15px">Quick Actions</h3>
+<button class="btn-red">+ REQUEST HELP</button>
+<div style="display:flex;gap:10px;padding:0 15px">
+<div style="flex:1;background:#FFC72C;padding:15px;border-radius:14px;text-align:center"><div>👥</div><b>850 Members</b><br><small>Active</small></div>
+<div style="flex:1;background:#C8E6C9;padding:15px;border-radius:14px;text-align:center"><div>📅</div><b>Next Payout:</b><br><small>30 Oct</small></div>
+</div>
+</div>
+
+<!-- PAYMENTS TAB -->
+<div id="payTab" class="hidden">
+<h2 style="padding:20px">Payments 🔔</h2>
+<div class="card-yellow">
+<h4>Monthly Due:</h4>
+<h1 style="font-size:62px">R15</h1>
+<p>R10 Cover + R5 Admin Fee<br><small>Due by 25 Oct 2025</small></p>
+<button style="background:#0B6A3D;color:white;width:100%;padding:15px;border-radius:12px;border:none;margin-top:15px;font-size:18px">💳 PAY NOW</button>
+</div>
+<div style="padding:15px"><h3>Payment History</h3><p style="margin:10px 0">✅ Oct 2025 • Paid R15</p><p>✅ Sep 2025 • Paid R15</p></div>
+</div>
+
+<!-- FEED TAB -->
+<div id="feedTab" class="hidden">
+<h2 style="padding:20px">Community Feed</h2>
+<div style="background:#FFC72C;margin:10px 15px;padding:10px;border-radius:10px">⭐ 850 members supporting each other</div>
+<div style="background:white;margin:10px 15px;padding:15px;border-radius:14px"><b>🔥 We helped Family in Nancefield</b><br><small>R10,000 for house fire • 850 contributed • 2 days ago • Verified & Paid</small></div>
+</div>
+
+<div class="nav">
+<div id="n1" class="active" onclick="showTab('home')">🏠 Home</div>
+<div id="n2" onclick="showTab('pay')">📊 Contributions</div>
+<div id="n3" onclick="showTab('feed')">💬 Feed</div>
+<div>👤 Profile</div>
+</div>
+
+<script>
+function showTab(t){
+document.getElementById('homeTab').classList.add('hidden');
+document.getElementById('payTab').classList.add('hidden');
+document.getElementById('feedTab').classList.add('hidden');
+document.getElementById('n1').classList.remove('active');
+document.getElementById('n2').classList.remove('active');
+document.getElementById('n3').classList.remove('active');
+if(t=='home'){document.getElementById('homeTab').classList.remove('hidden');document.getElementById('n1').classList.add('active')}
+if(t=='pay'){document.getElementById('payTab').classList.remove('hidden');document.getElementById('n2').classList.add('active')}
+if(t=='feed'){document.getElementById('feedTab').classList.remove('hidden');document.getElementById('n3').classList.add('active')}
+}
+</script>
+</body>
+</html>
