@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MUSINA COMMUNITY 10</title>
+<title>MUSINA COMMUNITY 10 RENT STOKVEL</title>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#0B6A3D">
 <style>
@@ -16,6 +16,7 @@ header img{width:42px;height:42px;border-radius:10px;background:white;object-fit
 .btn{border:none;padding:12px 16px;border-radius:12px;font-weight:700;cursor:pointer}
 .btn-yellow{background:var(--yellow);color:var(--dark)}
 .btn-green{background:var(--green);color:white}
+.btn-red{background:#D32F2F;color:white}
 .btn-outline{background:white;border:2px solid var(--green);color:var(--green)}
 .card{background:white;margin:12px;border-radius:18px;padding:16px;box-shadow:0 4px 12px rgba(0,0,0,.08);border:1px solid #EFE5C0}
 .nav{position:fixed;bottom:0;left:0;right:0;background:white;display:flex;justify-content:space-around;padding:8px 0 14px;border-top:1px solid #EADFAA;z-index:20}
@@ -34,25 +35,43 @@ header img{width:42px;height:42px;border-radius:10px;background:white;object-fit
 <header>
 <div class="brand">
 <img src="logo.png" alt="M10">
-<div><h1 style="font-size:16px">MUSINA COMMUNITY 10</h1><div style="font-size:10px">10 STOKVEL • MUSINA</div></div>
+<div><h1 style="font-size:13px">MUSINA COMMUNITY 10 RENT STOKVEL</h1><div style="font-size:10px">10 STOKVEL • MUSINA</div></div>
 </div>
 <button onclick="openProfile()" style="background:#FFC72C;border:none;width:38px;height:38px;border-radius:50%;font-weight:900;cursor:pointer">P</button>
 </header>
 
 <div id="homePage">
 <div class="card" style="background:#0B6A3D;color:white">
-<h2 style="margin:10px 0">R<span id="totalPot">0</span> Total Pot</h2>
-<p style="font-size:13px">10 Members • R500/month each</p>
+<h2 style="margin:6px 0">R<span id="totalPot">0</span> Rent Pot</h2>
+<h3 style="margin:6px 0;color:#FFC72C">🛡️ R<span id="disasterPot">0</span> Disaster Fund</h3>
+<p style="font-size:12px"><span id="memberCount">0</span> Members • R<span id="monthlyAmt">500</span>/month (R<span id="disasterPer">100</span> to disaster)</p>
+
+<!-- 2 DISASTER BUTTONS - NATURAL DISASTER TIME -->
+<div style="background:rgba(255,255,255,.15);padding:10px;border-radius:12px;margin-top:12px">
+<p style="font-size:11px;margin-bottom:8px;font-weight:700">🚨 NATURAL DISASTER TIME:</p>
+<div class="grid2">
+<button class="btn btn-red" style="padding:10px;font-size:11px" onclick="openDisasterReport()">🚨 REPORT DISASTER</button>
+<button class="btn btn-yellow" style="padding:10px;font-size:11px" onclick="openDisasterRequest()">🛡️ REQUEST R10k HELP</button>
+</div>
+</div>
+
 <div class="grid2" style="margin-top:14px">
 <button class="btn btn-yellow" onclick="openPay()">PAY NOW</button>
-<button class="btn btn-outline" style="background:white" onclick="goMembers()">MEMBERS</button>
+<button class="btn btn-outline" style="background:white" onclick="openSettings()">⚙️ SETTINGS</button>
 </div>
 </div>
+
+<div class="card" id="disasterReportsCard" style="display:none;border:2px solid #D32F2F">
+<h3 style="color:#D32F2F">🚨 Active Disasters Reported</h3>
+<div id="disasterReportsList" style="margin-top:10px;font-size:13px"></div>
+</div>
+
 <div class="card">
 <h3>Quick Pay - Super Simple</h3>
 <input id="payAmount" class="input" type="number" placeholder="e.g. 500">
 <button class="btn btn-green" style="width:100%;margin-top:10px" onclick="doPay()">PAY NOW</button>
 </div>
+
 <div class="card">
 <h3>Recent Activity</h3>
 <div id="activity" style="margin-top:10px;font-size:13px">No payments yet. Be first!</div>
@@ -74,6 +93,10 @@ header img{width:42px;height:42px;border-radius:10px;background:white;object-fit
 <div class="card" id="pendingCard" style="display:none">
 <h3>Pending Requests (Admin)</h3>
 <div id="pendingList" style="margin-top:10px"></div>
+</div>
+<div class="card" id="disasterHelpCard" style="display:none">
+<h3>🛡️ Disaster Help Requests (Admin)</h3>
+<div id="disasterHelpList" style="margin-top:10px"></div>
 </div>
 </div>
 
@@ -98,14 +121,19 @@ header img{width:42px;height:42px;border-radius:10px;background:white;object-fit
 </div>
 </div>
 
-<!-- PAY -->
+<!-- TRUSTED PAY -->
 <div id="payModal" class="modal" onclick="if(event.target==this)closePay()">
 <div class="modalBox">
-<h3>Pay Stokvel</h3>
-<input id="mPayAmount" class="input" value="500">
-<div class="grid2" style="margin-top:14px">
-<button class="btn btn-outline" onclick="closePay()">CANCEL</button>
-<button class="btn btn-yellow" onclick="confirmPay()">I PAID</button>
+<h3>💳 Trusted Pay</h3>
+<div style="display:grid;gap:10px;margin-top:12px">
+<button class="btn btn-green" style="width:100%;padding:16px" onclick="payWithCard()">💳 Pay with Card<br><small>Visa/Mastercard - Yoco</small></button>
+<button class="btn btn-yellow" style="width:100%;padding:16px" onclick="payWithFlash()">⚡ Flash / 1ForYou<br><small>Shoprite, Boxer</small></button>
+<button class="btn btn-outline" style="width:100%;padding:16px" onclick="payWithOzow()">📱 Capitec / Ozow EFT<br><small>Instant EFT</small></button>
+<input id="mPayAmount" class="input" value="500" placeholder="Amount">
+</div>
+<div class="grid2" style="margin-top:10px">
+<button class="btn btn-outline" onclick="closePay()">CLOSE</button>
+<button class="btn btn-green" onclick="confirmPay()">I PAID CASH</button>
 </div>
 </div>
 </div>
@@ -113,41 +141,66 @@ header img{width:42px;height:42px;border-radius:10px;background:white;object-fit
 <!-- RECEIPT -->
 <div id="receiptModal" class="modal" onclick="if(event.target==this)closeReceipt()">
 <div class="modalBox" style="border:3px solid #0B6A3D">
-<h3 style="color:#0B6A3D">✅ PAYMENT RECEIPT</h3>
-<p style="margin:10px 0;font-size:12px">MUSINA COMMUNITY 10</p>
-<div style="background:#FFFBEB;padding:12px;border-radius:10px;margin:10px 0;font-size:13px;line-height:1.6" id="receiptData"></div>
-<div class="grid2">
-<button class="btn btn-outline" onclick="closeReceipt()">CLOSE</button>
-<button class="btn btn-green" onclick="downloadReceipt()">📥 SAVE</button>
-</div>
+<h3 style="color:#0B6A3D">✅ RECEIPT</h3>
+<div style="background:#FFFBEB;padding:12px;border-radius:10px;margin:10px 0;font-size:13px" id="receiptData"></div>
+<div class="grid2"><button class="btn btn-outline" onclick="closeReceipt()">CLOSE</button><button class="btn btn-green" onclick="downloadReceipt()">📥 SAVE</button></div>
 </div>
 </div>
 
-<!-- REQUEST -->
+<!-- REQUEST JOIN -->
 <div id="requestModal" class="modal" onclick="if(event.target==this)closeRequest()">
 <div class="modalBox">
 <h3>Request to Join</h3>
 <input id="rName" class="input" placeholder="Your name">
-<input id="rPhone" class="input" style="margin-top:8px" placeholder="Phone 07...">
-<div class="grid2" style="margin-top:14px">
-<button class="btn btn-outline" onclick="closeRequest()">CANCEL</button>
-<button class="btn btn-yellow" onclick="submitRequest()">SEND REQUEST</button>
-</div>
+<input id="rPhone" class="input" style="margin-top:8px" placeholder="Phone">
+<div class="grid2" style="margin-top:14px"><button class="btn btn-outline" onclick="closeRequest()">CANCEL</button><button class="btn btn-yellow" onclick="submitRequest()">SEND</button></div>
 </div>
 </div>
 
-<!-- CHATBOT -->
-<button onclick="openChat()" style="position:fixed;bottom:80px;left:12px;background:#0B6A3D;color:white;border:none;width:56px;height:56px;border-radius:50%;font-size:24px;z-index:30;box-shadow:0 4px 12px rgba(0,0,0,.3)">💬</button>
+<!-- DISASTER REPORT MODAL - BUTTON 1 -->
+<div id="disasterReportModal" class="modal" onclick="if(event.target==this)closeDisasterReport()">
+<div class="modalBox" style="border:3px solid #D32F2F">
+<h3 style="color:#D32F2F">🚨 Report Natural Disaster</h3>
+<p style="font-size:12px;margin:8px 0">Tell all 10 members about flood, fire, etc.</p>
+<select id="dType" class="input"><option>Flood</option><option>Fire</option><option>Storm</option><option>Shack Destroyed</option><option>Other Disaster</option></select>
+<input id="dLocation" class="input" style="margin-top:8px" placeholder="Location - e.g. Musina Ext 5">
+<textarea id="dDesc" class="input" style="margin-top:8px" placeholder="What happened?"></textarea>
+<div class="grid2" style="margin-top:14px"><button class="btn btn-outline" onclick="closeDisasterReport()">CANCEL</button><button class="btn btn-red" onclick="submitDisasterReport()">🚨 REPORT NOW</button></div>
+</div>
+</div>
+
+<!-- DISASTER HELP REQUEST - BUTTON 2 -->
+<div id="disasterHelpModal" class="modal" onclick="if(event.target==this)closeDisasterRequest()">
+<div class="modalBox" style="border:3px solid #0B6A3D">
+<h3 style="color:#0B6A3D">🛡️ Request R10,000 Disaster Help</h3>
+<p style="font-size:12px;margin:8px 0">Request help from disaster fund - grows with members!</p>
+<input id="hName" class="input" placeholder="Your name">
+<input id="hPhone" class="input" style="margin-top:8px" placeholder="Phone 07...">
+<select id="hType" class="input" style="margin-top:8px"><option>Need R10,000 Disaster Relief</option><option>Need Rent Help After Disaster</option><option>Need Food/Shelter</option></select>
+<textarea id="hReason" class="input" style="margin-top:8px" placeholder="Explain disaster - why you need R10k"></textarea>
+<div class="grid2" style="margin-top:14px"><button class="btn btn-outline" onclick="closeDisasterRequest()">CANCEL</button><button class="btn btn-green" onclick="submitDisasterHelp()">🛡️ REQUEST HELP</button></div>
+</div>
+</div>
+
+<!-- SETTINGS -->
+<div id="settingsModal" class="modal" onclick="if(event.target==this)closeSettings()">
+<div class="modalBox">
+<h3>⚙️ Settings (Admin)</h3>
+<label style="font-size:12px">Monthly per Member</label><input id="sMonthly" class="input" type="number" value="500">
+<label style="font-size:12px;margin-top:8px;display:block">Disaster per Member</label><input id="sDisaster" class="input" type="number" value="100">
+<label style="font-size:12px;margin-top:8px;display:block">Fixed Disaster Total - e.g. 10000</label><input id="sDisasterFixed" class="input" type="number" value="10000">
+<div style="background:#FFFBEB;padding:10px;border-radius:10px;margin:10px 0;font-size:12px" id="settingsPreview"></div>
+<div class="grid2"><button class="btn btn-outline" onclick="closeSettings()">CANCEL</button><button class="btn btn-green" onclick="saveSettings()">SAVE</button></div>
+</div>
+</div>
+
+<!-- CHAT -->
+<button onclick="openChat()" style="position:fixed;bottom:80px;left:12px;background:#0B6A3D;color:white;border:none;width:56px;height:56px;border-radius:50%;font-size:24px;z-index:30">💬</button>
 <div id="chatModal" class="modal" onclick="if(event.target==this)closeChat()">
 <div class="modalBox">
-<h3>💚 M10 Encouragement</h3>
-<div style="height:200px;overflow:auto;background:#FFFBEB;padding:10px;border-radius:10px;margin:10px 0;font-size:13px" id="chatBox">
-<div>🤖 Bot: Dumela! We are family! 10 hearts, 1 stokvel! 💛 Stay strong!</div>
-</div>
-<div style="display:flex;gap:8px">
-<input id="chatInput" class="input" placeholder="Type problem..." style="margin:0">
-<button class="btn btn-green" onclick="sendChat()">SEND</button>
-</div>
+<h3>💚 M10 Group Chat</h3>
+<div style="height:220px;overflow:auto;background:#FFFBEB;padding:10px;border-radius:10px;margin:10px 0;font-size:13px" id="chatBox"></div>
+<div style="display:flex;gap:8px"><input id="chatInput" class="input" placeholder="Type to all..." style="margin:0"><button class="btn btn-green" onclick="sendChat()">SEND</button></div>
 <button class="btn btn-outline" style="width:100%;margin-top:10px" onclick="closeChat()">CLOSE</button>
 </div>
 </div>
@@ -158,70 +211,93 @@ let members=JSON.parse(localStorage.getItem('m10_members')||'[]');
 let pending=JSON.parse(localStorage.getItem('m10_pending')||'[]');
 let total=parseInt(localStorage.getItem('m10_total')||'0');
 let activity=JSON.parse(localStorage.getItem('m10_act')||'[]');
+let chatMsgs=JSON.parse(localStorage.getItem('m10_chat')||'[]');
+let disasters=JSON.parse(localStorage.getItem('m10_disasters')||'[]');
+let helpRequests=JSON.parse(localStorage.getItem('m10_help')||'[]');
 if(members.length==0){members=[{name:'Member 1',phone:'',paid:0},{name:'Member 2',phone:'',paid:0},{name:'Member 3',phone:'',paid:0}];}
-function saveAll(){localStorage.setItem('m10_members',JSON.stringify(members));localStorage.setItem('m10_pending',JSON.stringify(pending));localStorage.setItem('m10_total',total);localStorage.setItem('m10_act',JSON.stringify(activity));}
+function saveAll(){localStorage.setItem('m10_members',JSON.stringify(members));localStorage.setItem('m10_pending',JSON.stringify(pending));localStorage.setItem('m10_total',total);localStorage.setItem('m10_act',JSON.stringify(activity));localStorage.setItem('m10_chat',JSON.stringify(chatMsgs));localStorage.setItem('m10_disasters',JSON.stringify(disasters));localStorage.setItem('m10_help',JSON.stringify(helpRequests));}
 function render(){
- document.getElementById('totalPot').innerText=total;
+ document.getElementById('totalPot').innerText=total.toLocaleString();
  const myName=(localStorage.getItem('m10_myName')||'').toLowerCase();
- document.getElementById('membersList').innerHTML=members.map((m,i)=>`
-  <div class="card ${myName && m.name.toLowerCase()==myName?'me':''}" style="margin:8px 0;padding:10px;display:flex;justify-content:space-between;align-items:center">
-   <div><b onclick="editName(${i})" style="cursor:pointer;text-decoration:underline">${m.name}</b> ${myName && m.name.toLowerCase()==myName?'<span class="badge">YOU</span>':''}<br><small>${m.phone||''} • R${m.paid} paid</small></div>
-   <div style="display:flex;gap:4px">
-    <button class="btn btn-yellow" style="padding:6px 10px;font-size:11px" onclick="payFor(${i})">PAY</button>
-    <button class="btn btn-outline" style="padding:6px 8px;font-size:11px" onclick="removeMember(${i})">X</button>
-   </div>
-  </div>`).join('')||'<small>No members yet. Add or request!</small>';
+ document.getElementById('membersList').innerHTML=members.map((m,i)=>`<div class="card ${myName && m.name.toLowerCase()==myName?'me':''}" style="margin:8px 0;padding:10px;display:flex;justify-content:space-between;align-items:center"><div><b onclick="editName(${i})" style="cursor:pointer;text-decoration:underline">${m.name}</b> ${myName && m.name.toLowerCase()==myName?'<span class="badge">YOU</span>':''}<br><small>${m.phone||''} • R${m.paid}</small></div><div style="display:flex;gap:4px"><button class="btn btn-yellow" style="padding:6px 10px;font-size:11px" onclick="payFor(${i})">PAY</button><button class="btn btn-outline" style="padding:6px 8px" onclick="removeMember(${i})">X</button></div></div>`).join('');
  document.getElementById('activity').innerHTML=activity.length?activity.map(a=>`<div>• ${a}</div>`).join(''):'No payments yet.';
- // pending
  const isAdmin=localStorage.getItem('m10_isAdmin')=='true';
  document.getElementById('pendingCard').style.display=isAdmin && pending.length?'block':'none';
- document.getElementById('pendingList').innerHTML=pending.map((p,i)=>`<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #F0E6B8"><span>${p.name} - ${p.phone}</span><button class="btn btn-green" style="padding:6px 10px;font-size:11px" onclick="approveRequest(${i})">ADD THEM</button></div>`).join('');
+ document.getElementById('pendingList').innerHTML=pending.map((p,i)=>`<div style="display:flex;justify-content:space-between;padding:8px 0"><span>${p.name}</span><button class="btn btn-green" style="padding:6px 10px" onclick="approveRequest(${i})">ADD</button></div>`).join('');
+ document.getElementById('disasterHelpCard').style.display=isAdmin && helpRequests.length?'block':'none';
+ document.getElementById('disasterHelpList').innerHTML=helpRequests.map((h,i)=>`<div style="padding:8px;border-bottom:1px solid #E8DD9C"><b>${h.name}</b> - ${h.type}<br><small>${h.reason} - ${h.phone}</small><br><button class="btn btn-green" style="padding:6px 10px;margin-top:6px" onclick="approveHelp(${i})">APPROVE R10k</button></div>`).join('');
+ // disasters
+ document.getElementById('disasterReportsCard').style.display=disasters.length?'block':'none';
+ document.getElementById('disasterReportsList').innerHTML=disasters.map(d=>`<div style="background:#FFEBEE;padding:8px;border-radius:8px;margin-bottom:6px"><b>🚨 ${d.type}</b> at ${d.location}<br><small>${d.desc} - by ${d.by} on ${d.date}</small></div>`).join('');
+ renderPro();
 }
-render();
+function renderPro(){
+ let monthly=parseInt(localStorage.getItem('m10_monthly')||500);
+ let per=parseInt(localStorage.getItem('m10_disasterPer')||100);
+ let fixed=parseInt(localStorage.getItem('m10_disasterFixed')||10000);
+ let mem=members.length;
+ let disaster = fixed>0? fixed : mem*per;
+ document.getElementById('memberCount').innerText=mem;
+ document.getElementById('monthlyAmt').innerText=monthly;
+ document.getElementById('disasterPer').innerText=per;
+ document.getElementById('disasterPot').innerText=disaster.toLocaleString();
+}
 function goHome(){document.getElementById('homePage').style.display='block';document.getElementById('membersPage').style.display='none';document.getElementById('navHome').classList.add('active');document.getElementById('navMembers').classList.remove('active');}
 function goMembers(){document.getElementById('homePage').style.display='none';document.getElementById('membersPage').style.display='block';document.getElementById('navHome').classList.remove('active');document.getElementById('navMembers').classList.add('active');render();}
 function openProfile(){document.getElementById('pName').value=localStorage.getItem('m10_myName')||'';document.getElementById('pPhone').value=localStorage.getItem('m10_myPhone')||'';document.getElementById('pIsAdmin').checked=localStorage.getItem('m10_isAdmin')=='true';document.getElementById('profileModal').classList.add('show');}
 function closeProfile(){document.getElementById('profileModal').classList.remove('show');}
-function saveProfile(){localStorage.setItem('m10_myName',document.getElementById('pName').value);localStorage.setItem('m10_myPhone',document.getElementById('pPhone').value);localStorage.setItem('m10_isAdmin',document.getElementById('pIsAdmin').checked);closeProfile();render();alert('Profile saved boss!');}
+function saveProfile(){localStorage.setItem('m10_myName',document.getElementById('pName').value);localStorage.setItem('m10_myPhone',document.getElementById('pPhone').value);localStorage.setItem('m10_isAdmin',document.getElementById('pIsAdmin').checked);closeProfile();render();alert('Saved boss!');}
 function openPay(){document.getElementById('payModal').classList.add('show');}
 function closePay(){document.getElementById('payModal').classList.remove('show');}
 function openRequest(){document.getElementById('requestModal').classList.add('show');}
 function closeRequest(){document.getElementById('requestModal').classList.remove('show');}
-function submitRequest(){
- let n=document.getElementById('rName').value.trim();let p=document.getElementById('rPhone').value.trim();
- if(!n)return alert('Put name boss');
- pending.push({name:n,phone:p});saveAll();closeRequest();render();
- alert(n+' requested! Admin will add them. They will see themselves after approval.');
- // Auto add for now so they see themselves immediately as you asked
- members.push({name:n,phone:p,paid:0});saveAll();render();
+function openDisasterReport(){document.getElementById('disasterReportModal').classList.add('show');}
+function closeDisasterReport(){document.getElementById('disasterReportModal').classList.remove('show');}
+function openDisasterRequest(){document.getElementById('hName').value=localStorage.getItem('m10_myName')||'';document.getElementById('hPhone').value=localStorage.getItem('m10_myPhone')||'';document.getElementById('disasterHelpModal').classList.add('show');}
+function closeDisasterRequest(){document.getElementById('disasterHelpModal').classList.remove('show');}
+function submitRequest(){let n=document.getElementById('rName').value.trim();let p=document.getElementById('rPhone').value.trim();if(!n)return alert('Put name');pending.push({name:n,phone:p});members.push({name:n,phone:p,paid:0});saveAll();closeRequest();render();alert(n+' added! YOU badge shows!');}
+function submitDisasterReport(){
+ let type=document.getElementById('dType').value;let loc=document.getElementById('dLocation').value;let desc=document.getElementById('dDesc').value;let by=localStorage.getItem('m10_myName')||'Member';
+ if(!loc)return alert('Put location boss');
+ disasters.unshift({type:type,location:loc,desc:desc,by:by,date:new Date().toLocaleDateString()});
+ activity.unshift(`🚨 DISASTER REPORTED: ${type} at ${loc} by ${by}`);
+ saveAll();closeDisasterReport();render();
+ // auto chat
+ chatMsgs.push({name:'🤖 M10 Bot',text:`🚨 POLE! Disaster reported: ${type} at ${loc}. M10 family stay safe! We will help! 🙏`,time:new Date().toLocaleTimeString().slice(0,5),isBot:true});
+ saveAll();alert('Disaster reported boss! All members will see it! 🛡️');
 }
-function approveRequest(i){let p=pending[i];if(!members.find(m=>m.name.toLowerCase()==p.name.toLowerCase())){members.push({name:p.name,phone:p.phone,paid:0});}pending.splice(i,1);saveAll();render();alert(p.name+' added boss!');}
-function addMemberByAdmin(){let n=document.getElementById('adminNameEdit').value.trim();if(!n)return alert('Put name');members.push({name:n,phone:'',paid:0});document.getElementById('adminNameEdit').value='';saveAll();render();alert(n+' added! They will see themselves when they login with same name.');}
-function editName(i){let newName=prompt('Edit name boss:',members[i].name);if(newName){members[i].name=newName.trim();saveAll();render();}}
+function submitDisasterHelp(){
+ let name=document.getElementById('hName').value.trim();let phone=document.getElementById('hPhone').value.trim();let type=document.getElementById('hType').value;let reason=document.getElementById('hReason').value.trim();
+ if(!name||!reason)return alert('Put name and reason boss');
+ helpRequests.push({name:name,phone:phone,type:type,reason:reason,date:new Date().toLocaleString()});
+ activity.unshift(`🛡️ HELP REQUEST: ${name} needs ${type}`);
+ saveAll();closeDisasterRequest();render();
+ chatMsgs.push({name:'🤖 M10 Bot',text:`🛡️ ${name} requested disaster help: ${type}. Admin will review! Stay strong ${name}! 💚`,time:new Date().toLocaleTimeString().slice(0,5),isBot:true});
+ saveAll();alert('Help requested boss! Admin will see and approve R10k for you!');
+}
+function approveHelp(i){let h=helpRequests[i];if(confirm(`Approve R10,000 for ${h.name}?`)){helpRequests.splice(i,1);activity.unshift(`✅ APPROVED: R10,000 to ${h.name} for disaster`);saveAll();render();alert(`Approved R10k for ${h.name} boss!`);}}
+function approveRequest(i){let p=pending[i];if(!members.find(m=>m.name.toLowerCase()==p.name.toLowerCase())){members.push({name:p.name,phone:p.phone,paid:0});}pending.splice(i,1);saveAll();render();}
+function addMemberByAdmin(){let n=document.getElementById('adminNameEdit').value.trim();if(!n)return alert('Put name');members.push({name:n,phone:'',paid:0});document.getElementById('adminNameEdit').value='';saveAll();render();}
+function editName(i){let newName=prompt('Edit name:',members[i].name);if(newName){members[i].name=newName.trim();saveAll();render();}}
 function removeMember(i){if(confirm('Remove '+members[i].name+'?')){members.splice(i,1);saveAll();render();}}
 function payFor(i){let amt=500;members[i].paid+=amt;total+=amt;activity.unshift(`${members[i].name} paid R${amt}`);saveAll();render();showReceipt(amt,members[i].name);}
 function doPay(){let amt=parseInt(document.getElementById('payAmount').value||'500');total+=amt;activity.unshift(`You paid R${amt}`);saveAll();render();showReceipt(amt);}
 function confirmPay(){let amt=parseInt(document.getElementById('mPayAmount').value||'500');total+=amt;activity.unshift(`Paid R${amt}`);saveAll();render();closePay();showReceipt(amt);}
-function showReceipt(amount,name){
- const id='M10-'+Date.now().toString().slice(-6);const date=new Date().toLocaleString();const myName=name||localStorage.getItem('m10_myName')||'Member';
- document.getElementById('receiptData').innerHTML=`Date: ${date}<br>Name: ${myName}<br>Amount: R${amount}<br>TxID: ${id}<br>Status: ✅ PAID<br><br>MUSINA COMMUNITY 10<br>Thank you! 💚`;
- document.getElementById('receiptModal').classList.add('show');
-}
+function showReceipt(amount,name){const id='M10-'+Date.now().toString().slice(-6);const date=new Date().toLocaleString();const myName=name||localStorage.getItem('m10_myName')||'Member';document.getElementById('receiptData').innerHTML=`Date: ${date}<br>Name: ${myName}<br>Amount: R${amount}<br>TxID: ${id}<br>Status: ✅ PAID<br><br>MUSINA COMMUNITY 10 RENT STOKVEL`;document.getElementById('receiptModal').classList.add('show');}
 function closeReceipt(){document.getElementById('receiptModal').classList.remove('show');}
-function downloadReceipt(){alert('Screenshot this receipt boss! 📸\n\n'+document.getElementById('receiptData').innerText);}
-function openChat(){document.getElementById('chatModal').classList.add('show');}
+function downloadReceipt(){alert('Screenshot receipt boss! 📸');}
+function openSettings(){if(localStorage.getItem('m10_isAdmin')!='true'){alert('Only Admin boss! Check I am Admin in Profile.');return;}document.getElementById('sMonthly').value=localStorage.getItem('m10_monthly')||500;document.getElementById('sDisaster').value=localStorage.getItem('m10_disasterPer')||100;document.getElementById('sDisasterFixed').value=localStorage.getItem('m10_disasterFixed')||10000;document.getElementById('settingsModal').classList.add('show');updatePreview();}
+function closeSettings(){document.getElementById('settingsModal').classList.remove('show');}
+function updatePreview(){let monthly=parseInt(document.getElementById('sMonthly').value||500);let per=parseInt(document.getElementById('sDisaster').value||100);let fixed=parseInt(document.getElementById('sDisasterFixed').value||0);let mem=members.length||10;let dis=fixed>0?fixed:mem*per;document.getElementById('settingsPreview').innerHTML=`Preview: R${monthly} x ${mem} = R${monthly*mem}<br>Disaster: ${fixed>0?'Fixed R'+fixed:'R'+per+' x '+mem+' = R'+dis}`;}
+function saveSettings(){localStorage.setItem('m10_monthly',document.getElementById('sMonthly').value||500);localStorage.setItem('m10_disasterPer',document.getElementById('sDisaster').value||100);localStorage.setItem('m10_disasterFixed',document.getElementById('sDisasterFixed').value||10000);closeSettings();render();alert('Saved boss!');}
+function payWithCard(){let link=localStorage.getItem('m10_paylink')||'';if(!link){link=prompt('Paste Yoco/Paystack link:','https://');if(link) localStorage.setItem('m10_paylink',link);}if(localStorage.getItem('m10_paylink')){window.open(localStorage.getItem('m10_paylink'),'_blank');setTimeout(()=>{showReceipt(500);closePay();},1000);}}
+function payWithFlash(){alert('FLASH: Go Shoprite buy 1ForYou voucher R500, send code to Admin');}
+function payWithOzow(){let link=localStorage.getItem('m10_ozow')||'';if(!link){link=prompt('Paste Ozow link:');if(link) localStorage.setItem('m10_ozow',link);}if(localStorage.getItem('m10_ozow')) window.open(localStorage.getItem('m10_ozow'),'_blank');}
+function openChat(){document.getElementById('chatModal').classList.add('show');renderChat();}
 function closeChat(){document.getElementById('chatModal').classList.remove('show');}
-function sendChat(){
- const input=document.getElementById('chatInput');const box=document.getElementById('chatBox');if(!input.value)return;
- box.innerHTML+=`<div style="margin-top:8px"><b>You:</b> ${input.value}</div>`;
- let reply="💚 Stay strong! Musina Community 10 is with you! Together we rise! 🙏";
- const txt=input.value.toLowerCase();
- if(txt.includes('flood')||txt.includes('fire')||txt.includes('disaster')||txt.includes('problem')||txt.includes('help')){
-  reply="🚨 POLE! Stay safe first! M10 family will support you. Admin will call you. You are not alone! We are 10, we are one! 💚💛";
- }
- setTimeout(()=>{box.innerHTML+=`<div style="margin-top:8px;color:#0B6A3D"><b>Bot:</b> ${reply}</div>`;box.scrollTop=box.scrollHeight;},400);
- input.value='';
-}
+function renderChat(){const box=document.getElementById('chatBox');if(chatMsgs.length==0){box.innerHTML=`<div>🤖 Bot: Dumela! Type to all 10 members! 💛💚</div>`;}else{box.innerHTML=chatMsgs.map(m=>`<div style="margin-top:8px;padding:6px;background:${m.isBot?'#E8F5E9':'white'};border-radius:8px"><b>${m.name}:</b> ${m.text} <small style="font-size:9px">${m.time}</small></div>`).join('');}box.scrollTop=box.scrollHeight;}
+function sendChat(){const input=document.getElementById('chatInput');if(!input.value.trim())return;const myName=localStorage.getItem('m10_myName')||'Member';const time=new Date().toLocaleTimeString().slice(0,5);chatMsgs.push({name:myName,text:input.value,time:time,isBot:false});const txt=input.value.toLowerCase();let botReply=txt.includes('sorry')||txt.includes('disaster')||txt.includes('flood')?"💚 Pole! Sorry! M10 family with you! Stay strong! 🙏":"💚 We hear you "+myName+"! 💪";setTimeout(()=>{chatMsgs.push({name:'🤖 M10 Bot',text:botReply,time:time,isBot:true});saveAll();renderChat();},700);saveAll();input.value='';renderChat();}
+render();
 </script>
 </body>
 </html>
