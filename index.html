@@ -4,101 +4,114 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MUSINA COMMUNITY 10</title>
-<meta name="theme-color" content="#0B6A3D">
 <link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0B6A3D">
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:Arial}
-body{background:#FFFBEB;max-width:420px;margin:0 auto;padding-bottom:90px}
-.header{display:flex;align-items:center;gap:10px;padding:16px;background:#FFFBEB}
-.logo{width:52px;height:52px;background:#0B6A3D;border-radius:12px;display:flex;align-items:center;justify-content:center;color:#FFC72C;font-weight:900}
-.card-green{background:#0B6A3D;border-radius:24px;padding:22px;color:white;margin:12px 15px}
-.card-yellow{background:#FFC72C;border-radius:24px;padding:20px;margin:12px 15px}
-.btn-red{background:#D32F2F;color:white;width:calc(100% - 30px);margin:12px 15px;padding:18px;border:none;border-radius:14px;font-size:17px;font-weight:800}
-.nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:420px;background:white;display:flex;justify-content:space-around;padding:10px;border-top:1px solid #eee}
-.nav-item{padding:8px 14px;border-radius:10px;text-align:center;font-size:13px}
-.active{background:#0B6A3D;color:white}
-.hidden{display:none}
-.quote-bar{background:linear-gradient(90deg,#0B6A3D,#FFC72C);color:white;padding:10px 15px;margin:10px 15px;border-radius:12px;font-size:13px;font-weight:700;text-align:center}
-.reply-box{display:flex;gap:6px;margin-top:10px}
-.reply-box input{flex:1;padding:11px;border-radius:20px;border:1px solid #ddd}
-.reply-btn{background:#0B6A3D;color:white;border:none;padding:11px 18px;border-radius:20px;font-weight:700}
-.feed-card{background:white;margin:10px 15px;padding:14px;border-radius:14px;border-left:4px solid #0B6A3D;box-shadow:0 2px 8px rgba(0,0,0,0.05)}
+:root{--green:#0B6A3D;--yellow:#FFC72C;--cream:#FFFBEB;--dark:#0B2E1F}
+*{box-sizing:border-box;margin:0;padding:0;font-family:system-ui,sans-serif}
+body{background:var(--cream);color:var(--dark)}
+header{background:var(--green);color:white;padding:14px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10}
+header.brand{display:flex;align-items:center;gap:10px}
+header img{width:42px;height:42px;border-radius:10px;background:white;object-fit:cover}
+.btn{border:none;padding:12px 16px;border-radius:12px;font-weight:700;cursor:pointer}
+.btn-yellow{background:var(--yellow);color:var(--dark)}
+.btn-green{background:var(--green);color:white}
+.btn-outline{background:white;border:2px solid var(--green);color:var(--green)}
+.card{background:white;margin:12px;border-radius:18px;padding:16px;box-shadow:0 4px 12px rgba(0,0,0,.08);border:1px solid #EFE5C0}
+.nav{position:fixed;bottom:0;left:0;right:0;background:white;display:flex;justify-content:space-around;padding:8px 0 14px;border-top:1px solid #EADFAA;z-index:20}
+.nav button{border:none;background:none;font-size:11px;font-weight:700;color:#8A7A3A;cursor:pointer;padding:6px 10px;border-radius:10px}
+.nav button.active{background:var(--green);color:white}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.input{width:100%;padding:12px;border-radius:10px;border:2px solid #E8DD9C;margin-top:6px}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;align-items:center;justify-content:center;z-index:50;padding:16px}
+.modal.show{display:flex}
+.modalBox{background:white;width:100%;max-width:420px;border-radius:18px;padding:18px}
 </style>
 </head>
 <body>
+<header>
+<div class="brand">
+<img src="logo.png" alt="M10">
+<div><h1 style="font-size:16px">MUSINA COMMUNITY 10</h1><div style="font-size:10px">10 STOKVEL • MUSINA</div></div>
+</div>
+<button onclick="openProfile()" style="background:#FFC72C;border:none;width:38px;height:38px;border-radius:50%;font-weight:900;cursor:pointer">P</button>
+</header>
 
-<!-- HOME -->
-<div id="homeTab">
-<div class="header"><div class="logo">M10</div><div><b>MUSINA COMMUNITY 10</b><br><small>Stokvel • Musina, Limpopo</small></div></div>
-<div class="quote-bar" id="quote">"R10 is small for you, but BIG when 850 of us stand together!"</div>
-<div class="card-green">
-<div style="background:white;color:#0B6A3D;display:inline-block;padding:4px 10px;border-radius:6px;font-size:12px;font-weight:700">Disaster Pot:</div>
-<h1 style="font-size:52px;margin:10px 0">R10,000</h1>
-<div style="background:#FFC72C;color:black;display:inline-block;padding:6px 14px;border-radius:20px;font-size:13px;font-weight:700">✅ My Cover: Active</div>
-</div>
-<button class="btn-red">+ REQUEST HELP</button>
-<div style="display:flex;gap:10px;padding:0 15px">
-<div style="flex:1;background:#FFC72C;padding:14px;border-radius:14px;text-align:center"><b>850</b><br><small>Members</small></div>
-<div style="flex:1;background:#C8E6C9;padding:14px;border-radius:14px;text-align:center"><b>30 Oct</b><br><small>Next Payout</small></div>
-</div>
-</div>
-
-<!-- PAY -->
-<div id="payTab" class="hidden">
-<h2 style="padding:18px 15px">Payments</h2>
-<div class="card-yellow">
-<h4>Monthly Due:</h4>
-<h1 style="font-size:60px">R15</h1>
-<p>R10 Cover + R5 Admin<br><small>Due by 25 Oct 2025</small></p>
-<button style="background:#0B6A3D;color:white;width:100%;padding:15px;border-radius:12px;border:none;margin-top:12px;font-weight:800" onclick="alert('Capitec 1234567890 Ref: Phone')">💳 PAY NOW</button>
+<div id="homePage">
+<div class="card" style="background:#0B6A3D;color:white">
+<h2 style="margin:10px 0">R<span id="totalPot">0</span> Total Pot</h2>
+<p style="font-size:13px">10 Members • R500/month each</p>
+<div class="grid2" style="margin-top:14px">
+<button class="btn btn-yellow" onclick="openPay()">PAY NOW</button>
+<button class="btn btn-outline" onclick="showMembers()">MEMBERS</button>
 </div>
 </div>
 
-<!-- FEED WITH REPLY -->
-<div id="feedTab" class="hidden">
-<h2 style="padding:18px 15px">Community Feed 💬</h2>
-<div style="background:#FFC72C;margin:0 15px;padding:10px;border-radius:10px;font-size:13px;font-weight:700">⭐ 850 members supporting each other</div>
+<div class="card">
+<h3>Quick Pay - Super Simple</h3>
+<input id="payAmount" class="input" type="number" placeholder="e.g. 500">
+<button class="btn btn-green" style="width:100%;margin-top:10px" onclick="doPay()">PAY NOW</button>
+</div>
 
-<div class="feed-card">
-<b>🔥 We helped Family in Nancefield</b><br>
-<small>R10,000 for house fire • 2 days ago • Verified</small>
-<div style="background:#FFFBEB;padding:10px;border-radius:10px;margin-top:8px;font-size:13px">
-<div style="margin:6px 0"><b style="color:#0B6A3D">TM</b> Stay strong family - Thandi M <small>1h ago</small></div>
-<div style="margin:6px 0"><b style="color:#0B6A3D">S</b> We are with you ❤️ - Sipho <small>45m ago</small></div>
-<div id="newReplies"></div>
-</div>
-<div class="reply-box">
-<input id="replyInput" placeholder="Write encouragement...">
-<button class="reply-btn" onclick="postReply()">Reply</button>
+<div class="card">
+<h3>Recent Activity</h3>
+<div id="activity" style="margin-top:10px;font-size:13px">No payments yet. Be first!</div>
 </div>
 </div>
+
+<div id="membersPage" style="display:none">
+<div class="card"><h3>10 Members</h3><div id="membersList" style="margin-top:10px"></div></div>
 </div>
 
 <div class="nav">
-<div class="nav-item active" id="b1" onclick="showTab('home')">🏠<br>Home</div>
-<div class="nav-item" id="b2" onclick="showTab('pay')">💳<br>Pay</div>
-<div class="nav-item" id="b3" onclick="showTab('feed')">💬<br>Feed</div>
-<div class="nav-item">👤<br>Profile</div>
+<button id="navHome" class="active" onclick="goHome()">🏠<br>HOME</button>
+<button id="navMembers" onclick="goMembers()">👥<br>MEMBERS</button>
+<button onclick="openProfile()">👤<br>PROFILE</button>
+<button onclick="openPay()">💳<br>PAY</button>
+</div>
+
+<div id="profileModal" class="modal" onclick="if(event.target==this)closeProfile()">
+<div class="modalBox">
+<h3>My Profile</h3>
+<input id="pName" class="input" placeholder="Your name">
+<input id="pPhone" class="input" style="margin-top:8px" placeholder="07...">
+<div class="grid2" style="margin-top:14px">
+<button class="btn btn-outline" onclick="closeProfile()">CANCEL</button>
+<button class="btn btn-green" onclick="saveProfile()">SAVE</button>
+</div>
+</div>
+</div>
+
+<div id="payModal" class="modal" onclick="if(event.target==this)closePay()">
+<div class="modalBox">
+<h3>Pay Stokvel</h3>
+<input id="mPayAmount" class="input" value="500">
+<div class="grid2" style="margin-top:14px">
+<button class="btn btn-outline" onclick="closePay()">CANCEL</button>
+<button class="btn btn-yellow" onclick="confirmPay()">I PAID</button>
+</div>
+</div>
 </div>
 
 <script>
-function showTab(t){
-document.getElementById('homeTab').classList.add('hidden');
-document.getElementById('payTab').classList.add('hidden');
-document.getElementById('feedTab').classList.add('hidden');
-document.getElementById('b1').classList.remove('active');document.getElementById('b2').classList.remove('active');document.getElementById('b3').classList.remove('active');
-if(t=='home'){document.getElementById('homeTab').classList.remove('hidden');document.getElementById('b1').classList.add('active')}
-if(t=='pay'){document.getElementById('payTab').classList.remove('hidden');document.getElementById('b2').classList.add('active')}
-if(t=='feed'){document.getElementById('feedTab').classList.remove('hidden');document.getElementById('b3').classList.add('active')}
-}
-function postReply(){
-let v=document.getElementById('replyInput').value;
-if(!v) return;
-document.getElementById('newReplies').innerHTML+=`<div style="margin:6px 0"><b>You</b> ${v} <small>Just now</small></div>`;
-document.getElementById('replyInput').value='';
-}
-const quotes=["R10 is small for you, but BIG when 850 stand together!","Musina doesn't wait for disaster - Musina PREPARES with R10!","Today you give R10, tomorrow R10 saves YOUR family!","MUSINA COMMUNITY 10 - Where R10 becomes HOPE!"];
-let qi=0;setInterval(()=>{document.getElementById('quote').innerText=quotes[qi%quotes.length];qi++},4000);
+if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js')}
+let members=JSON.parse(localStorage.getItem('m10_members')||'[]');
+if(members.length==0){members=[{name:'Member 1',paid:0},{name:'Member 2',paid:0},{name:'Member 3',paid:0},{name:'Member 4',paid:0},{name:'Member 5',paid:0},{name:'Member 6',paid:0},{name:'Member 7',paid:0},{name:'Member 8',paid:0},{name:'Member 9',paid:0},{name:'Admin',paid:0}];localStorage.setItem('m10_members',JSON.stringify(members))}
+let total=parseInt(localStorage.getItem('m10_total')||'0');
+let activity=JSON.parse(localStorage.getItem('m10_act')||'[]');
+function render(){document.getElementById('totalPot').innerText=total;document.getElementById('membersList').innerHTML=members.map((m,i)=>`<div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #F0E6B8"><span>${m.name} - R${m.paid}</span><button class="btn btn-yellow" style="padding:6px 10px;font-size:12px" onclick="payFor(${i})">PAY</button></div>`).join('');document.getElementById('activity').innerHTML=activity.length?activity.map(a=>`<div>• ${a}</div>`).join(''):'No payments yet.'}
+render();
+function goHome(){document.getElementById('homePage').style.display='block';document.getElementById('membersPage').style.display='none';document.getElementById('navHome').classList.add('active');document.getElementById('navMembers').classList.remove('active');}
+function goMembers(){document.getElementById('homePage').style.display='none';document.getElementById('membersPage').style.display='block';document.getElementById('navHome').classList.remove('active');document.getElementById('navMembers').classList.add('active');render();}
+function showMembers(){goMembers();}
+function openProfile(){document.getElementById('profileModal').classList.add('show');}
+function closeProfile(){document.getElementById('profileModal').classList.remove('show');}
+function saveProfile(){localStorage.setItem('m10_myName',document.getElementById('pName').value);localStorage.setItem('m10_myPhone',document.getElementById('pPhone').value);closeProfile();alert('Profile saved boss!');}
+function openPay(){document.getElementById('payModal').classList.add('show');}
+function closePay(){document.getElementById('payModal').classList.remove('show');}
+function doPay(){let amt=parseInt(document.getElementById('payAmount').value||'500');total+=amt;activity.unshift(`You paid R${amt}`);localStorage.setItem('m10_total',total);localStorage.setItem('m10_act',JSON.stringify(activity));render();alert('Paid R'+amt+' boss!');}
+function confirmPay(){let amt=parseInt(document.getElementById('mPayAmount').value||'500');total+=amt;activity.unshift(`Paid R${amt}`);localStorage.setItem('m10_total',total);localStorage.setItem('m10_act',JSON.stringify(activity));render();closePay();alert('Thank you boss! R'+amt+' added!');}
+function payFor(i){let amt=500;members[i].paid+=amt;total+=amt;activity.unshift(`${members[i].name} paid R${amt}`);localStorage.setItem('m10_members',JSON.stringify(members));localStorage.setItem('m10_total',total);localStorage.setItem('m10_act',JSON.stringify(activity));render();alert(members[i].name+' paid R'+amt);}
 </script>
 </body>
 </html>
